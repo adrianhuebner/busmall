@@ -4,40 +4,28 @@ var productOneEl = document.getElementById('productOne');
 var productTwoEl = document.getElementById('productTwo');
 var productThreeEl = document.getElementById('productThree');
 var productContainerEl = document.getElementById('productContainer');
-var voteCount = 0;
+var votesRemaining = 0;
+var ulEl = document.getElementById('list');
+//var resultsList = document.getElementById('results');
+
+// got this code from class, changed mine after I saw how clean it looked in class
+var images = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'usb.gif', 'water-can.jpg', 'wine-glass.jpg'];
 
 var recentRandomProduct = [];
 var allProducts =[];
 
-function Products(name, filetype){
-  this.name = name;
-  this.filepath = `img/${name}.${filetype}`;
+function Products(name){
+  this.name = name.split('.')[0];
+  this.filepath = `img/${name}`;
   this.votes = 0;
   this.views = 0;
 
   allProducts.push(this);
 }
 
-new Products('bag','jpg');
-new Products('banana', 'jpg');
-new Products('bathroom', 'jpg');
-new Products('boots', 'jpg');
-new Products('breakfast', 'jpg');
-new Products('bubblegum', 'jpg');
-new Products('chair', 'jpg');
-new Products('cthulhu', 'jpg');
-new Products('dog-duck', 'jpg');
-new Products('dragon', 'jpg');
-new Products('pen', 'jpg');
-new Products('pet-sweep', 'jpg');
-new Products('scissors', 'jpg');
-new Products('shark', 'jpg');
-new Products('sweep', 'png');
-new Products('tauntaun', 'jpg');
-new Products('unicorn', 'jpg');
-new Products('usb', 'gif');
-new Products('water-can', 'jpg');
-new Products('wine-glass', 'jpg');
+for(var i =0; i < images.length; i++){
+  new Products(images[i]);
+}
 
 function render(){
   var randomProducts = getUniqueProduct();
@@ -81,18 +69,31 @@ function getUniqueProduct(){
 
 function handleClick(){
   var chosenProduct = event.target.title;
-  voteCount++;
+  votesRemaining++;
 
   for(var i = 0; i < allProducts.length; i++){
     if(allProducts[i].name === chosenProduct){
       allProducts[i].votes++;
     }
   }
-  if (voteCount > 24){
+  if (votesRemaining > 24){
     productContainerEl.removeEventListener('click', handleClick, true);
+    generateList();
   }
   render();
 }
 productContainerEl.addEventListener('click', handleClick, true);
 
 render();
+
+Products.prototype.renderResults = function(){
+  var liEl = document.createElement('li');
+  liEl.textContent = `${this.votes} votes for ${this.name}`;
+  ulEl.appendChild(liEl);
+};
+
+function generateList(){
+  for(var i =0; i < allProducts.length; i++){
+    allProducts[i].renderResults();
+  }
+}
