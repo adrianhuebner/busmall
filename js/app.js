@@ -4,6 +4,7 @@ var productOneEl = document.getElementById('productOne');
 var productTwoEl = document.getElementById('productTwo');
 var productThreeEl = document.getElementById('productThree');
 var productContainerEl = document.getElementById('productContainer');
+var voteCount = 0;
 
 var recentRandomProduct = [];
 var allProducts =[];
@@ -27,7 +28,7 @@ new Products('chair', 'jpg');
 new Products('cthulhu', 'jpg');
 new Products('dog-duck', 'jpg');
 new Products('dragon', 'jpg');
-//new Products('pen', 'jpg');
+new Products('pen', 'jpg');
 new Products('pet-sweep', 'jpg');
 new Products('scissors', 'jpg');
 new Products('shark', 'jpg');
@@ -40,19 +41,19 @@ new Products('wine-glass', 'jpg');
 
 function render(){
   var randomProducts = getUniqueProduct();
-  console.log('This is the random product: ', randomProducts);
+  //console.log('This is the random product: ', randomProducts);
   allProducts[randomProducts].views++;
   productOneEl.src = allProducts[randomProducts].filepath;
   productOneEl.alt = allProducts[randomProducts].name;
   productOneEl.title = allProducts[randomProducts].name;
 
-  var randomProducts = getUniqueProduct();
+  randomProducts = getUniqueProduct();
   allProducts[randomProducts].views++;
   productTwoEl.src = allProducts[randomProducts].filepath;
   productTwoEl.alt = allProducts[randomProducts].name;
   productTwoEl.title = allProducts[randomProducts].name;
 
-  var randomProducts = getUniqueProduct();
+  randomProducts = getUniqueProduct();
   allProducts[randomProducts].views++;
   productThreeEl.src = allProducts[randomProducts].filepath;
   productThreeEl.alt = allProducts[randomProducts].name;
@@ -74,20 +75,24 @@ function getUniqueProduct(){
     recentRandomProduct.shift();
   }
   recentRandomProduct.push(randomIndex);
-  console.log('My random index is: ', randomIndex);
+  //console.log('My random index is: ', randomIndex);
   return randomIndex;
 }
 
 function handleClick(){
   var chosenProduct = event.target.title;
+  voteCount++;
 
   for(var i = 0; i < allProducts.length; i++){
     if(allProducts[i].name === chosenProduct){
       allProducts[i].votes++;
     }
   }
+  if (voteCount > 24){
+    productContainerEl.removeEventListener('click', handleClick, true);
+  }
   render();
 }
-productContainerEl.addEventListener('click', handleClick);
+productContainerEl.addEventListener('click', handleClick, true);
 
 render();
