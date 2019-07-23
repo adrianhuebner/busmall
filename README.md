@@ -1,1 +1,3 @@
-# busmall
+# BusMall Voting System
+
+## By: Adrian Huebner
