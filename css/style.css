@@ -40,12 +40,13 @@ p{
 #myChart{
   width: 900px;
   height: 300px;
-  position: relative;
+  position: block;
 }
 #pieChart{
   width: 900px;
   height: 300px;
-  position: relative;
+  position: block;
+  top: 50px;
 }
 #productContainer{
   text-align: center;
