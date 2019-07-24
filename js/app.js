@@ -107,7 +107,6 @@ productContainerEl.addEventListener('click', handleClick, true);
 
 render();
 
-
 function generateChart(){
   var ctx = document.getElementById('myChart').getContext('2d');
   new Chart(ctx, {
@@ -174,7 +173,7 @@ function generateChart(){
   });
 }
 function generatePie(){
-  var ctx = document.getElementById('myChart').getContext('2d');
+  var ctx = document.getElementById('myPieChart').getContext('2d');
   new Chart(ctx, {
     type: 'pie',
     data: {
