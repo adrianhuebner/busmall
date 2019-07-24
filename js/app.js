@@ -5,7 +5,9 @@ var productTwoEl = document.getElementById('productTwo');
 var productThreeEl = document.getElementById('productThree');
 var productContainerEl = document.getElementById('productContainer');
 var votesRemaining = 0;
-var ulEl = document.getElementById('list');
+var productNames = [];
+var totalVotes = [];
+var top3Votes = [];
 //var resultsList = document.getElementById('results');
 
 // got this code from class, changed mine after I saw how clean it looked in class
@@ -48,7 +50,11 @@ function render(){
   productThreeEl.title = allProducts[randomProducts].name;
 }
 
-//helper functions!!
+// helper functions!!
+// function topVotes(){
+//   var sorted = totalVotes.sort(function(a,b){return b-a})
+//   console.log(sorted);
+// }
 
 function randomNumber(min,max){
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -67,6 +73,19 @@ function getUniqueProduct(){
   return randomIndex;
 }
 
+function generateArrays(){
+  for(var i =0; i < allProducts.length; i++){
+    productNames.push(allProducts[i].name);
+    totalVotes.push(allProducts[i].votes);
+  }
+  var sortVotes = totalVotes.sort();
+  sortVotes.reverse();
+  top3Votes.push(sortVotes[0]);
+  top3Votes.push(sortVotes[1]);
+  top3Votes.push(sortVotes[2]);
+  console.log(sortVotes);
+}
+
 function handleClick(){
   var chosenProduct = event.target.title;
   votesRemaining++;
@@ -78,7 +97,9 @@ function handleClick(){
   }
   if (votesRemaining > 24){
     productContainerEl.removeEventListener('click', handleClick, true);
-    generateList();
+    generateArrays();
+    generateChart();
+    generatePie();
   }
   render();
 }
@@ -86,14 +107,102 @@ productContainerEl.addEventListener('click', handleClick, true);
 
 render();
 
-Products.prototype.renderResults = function(){
-  var liEl = document.createElement('li');
-  liEl.textContent = `${this.votes} votes for ${this.name}`;
-  ulEl.appendChild(liEl);
-};
 
-function generateList(){
-  for(var i =0; i < allProducts.length; i++){
-    allProducts[i].renderResults();
-  }
+function generateChart(){
+  var ctx = document.getElementById('myChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: productNames,
+      datasets: [{
+        label: '# of Votes',
+        data: totalVotes,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(130, 91, 169, 0.2)',
+          'rgba(101, 145, 13, 0.2)',
+          'rgba(240, 71, 91, 0.2)',
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(130, 91, 169, 0.2)',
+          'rgba(101, 145, 13, 0.2)',
+          'rgba(240, 71, 91, 0.2)',
+          'rgba(255, 99, 132, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(130, 91, 169, 1)',
+          'rgba(101, 145, 13, 1)',
+          'rgba(240, 71, 91, 1)',
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(130, 91, 169, 1)',
+          'rgba(101, 145, 13, 1)',
+          'rgba(240, 71, 91, 1)',
+          'rgba(255, 99, 132, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+}
+function generatePie(){
+  var ctx = document.getElementById('myChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: productNames,
+      datasets: [{
+        label: 'Top 3 Voted for Items',
+        data: top3Votes,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
 }
