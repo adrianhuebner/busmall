@@ -8,6 +8,7 @@ var votesRemaining = 0;
 var productNames = [];
 var totalVotes = [];
 var top3Votes = [];
+var top3Labels = [];
 //var resultsList = document.getElementById('results');
 
 // got this code from class, changed mine after I saw how clean it looked in class
@@ -25,36 +26,16 @@ function Products(name){
   allProducts.push(this);
 }
 
-for(var i =0; i < images.length; i++){
-  new Products(images[i]);
-}
-
-function render(){
+function render(imageEl){
   var randomProducts = getUniqueProduct();
   //console.log('This is the random product: ', randomProducts);
   allProducts[randomProducts].views++;
-  productOneEl.src = allProducts[randomProducts].filepath;
-  productOneEl.alt = allProducts[randomProducts].name;
-  productOneEl.title = allProducts[randomProducts].name;
-
-  randomProducts = getUniqueProduct();
-  allProducts[randomProducts].views++;
-  productTwoEl.src = allProducts[randomProducts].filepath;
-  productTwoEl.alt = allProducts[randomProducts].name;
-  productTwoEl.title = allProducts[randomProducts].name;
-
-  randomProducts = getUniqueProduct();
-  allProducts[randomProducts].views++;
-  productThreeEl.src = allProducts[randomProducts].filepath;
-  productThreeEl.alt = allProducts[randomProducts].name;
-  productThreeEl.title = allProducts[randomProducts].name;
+  imageEl.src = allProducts[randomProducts].filepath;
+  imageEl.alt = allProducts[randomProducts].name;
+  imageEl.title = allProducts[randomProducts].name;
 }
 
-// helper functions!!
-// function topVotes(){
-//   var sorted = totalVotes.sort(function(a,b){return b-a})
-//   console.log(sorted);
-// }
+// helper functions!
 
 function randomNumber(min,max){
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -73,39 +54,50 @@ function getUniqueProduct(){
   return randomIndex;
 }
 
+// from TA Ron and then from class work
+
 function generateArrays(){
+  top3Votes = [];
+  top3Labels = [];
   for(var i =0; i < allProducts.length; i++){
     productNames.push(allProducts[i].name);
     totalVotes.push(allProducts[i].votes);
   }
-  var sortVotes = totalVotes.sort();
-  sortVotes.reverse();
-  top3Votes.push(sortVotes[0]);
-  top3Votes.push(sortVotes[1]);
-  top3Votes.push(sortVotes[2]);
-  console.log(sortVotes);
+  // var sortVotes = totalVotes.sort();
+  // sortVotes.reverse();
+  // top3Votes.push(sortVotes[0]);
+  // top3Votes.push(sortVotes[1]);
+  // top3Votes.push(sortVotes[2]);
+  // //console.log(sortVotes);
+
+  allProducts.sort(function(a,b){
+    a.votes < b.votes ? 1 : -1;
+  });
+
+  var top3Obj = allProducts.slice(0,3);
+  for(var j = 0; j < top3Obj.length; j++){
+    top3Labels.push(top3Obj[j].name);
+    top3Votes.push(top3Obj[j].votes);
+  }
 }
 
-function handleClick(){
-  var chosenProduct = event.target.title;
-  votesRemaining++;
+//LOCAL STORAGE////
+function productCrap(){
+  var objString = JSON.stringify(allProducts);
+  localStorage.setItem('product-key', objString);
+}
 
-  for(var i = 0; i < allProducts.length; i++){
-    if(allProducts[i].name === chosenProduct){
-      allProducts[i].votes++;
+function storageFinder(){
+  var storeProducts = localStorage.getItem('product-key');
+  if(localStorage.length === 0){
+    for(var i =0; i < images.length; i++){
+      new Products(images[i]);
     }
+  } else{
+    var parseProduct = JSON.parse(storeProducts);
+    allProducts = parseProduct;
   }
-  if (votesRemaining > 24){
-    productContainerEl.removeEventListener('click', handleClick, true);
-    generateArrays();
-    generateChart();
-    generatePie();
-  }
-  render();
 }
-productContainerEl.addEventListener('click', handleClick, true);
-
-render();
 
 function generateChart(){
   var ctx = document.getElementById('myChart').getContext('2d');
@@ -172,12 +164,13 @@ function generateChart(){
     }
   });
 }
+
 function generatePie(){
   var ctx = document.getElementById('myPieChart').getContext('2d');
   new Chart(ctx, {
     type: 'pie',
     data: {
-      labels: productNames,
+      labels: top3Labels,
       datasets: [{
         label: 'Top 3 Voted for Items',
         data: top3Votes,
@@ -205,3 +198,36 @@ function generatePie(){
     }
   });
 }
+
+function handleClick(){
+  var chosenProduct = event.target.title;
+  votesRemaining++;
+
+  for(var i = 0; i < allProducts.length; i++){
+    if(allProducts[i].name === chosenProduct){
+      allProducts[i].votes++;
+    }
+  }
+  if (votesRemaining > 24){
+    productContainerEl.removeEventListener('click', handleClick, true);
+    generateArrays();
+    generateChart();
+    generatePie();
+    productCrap();
+  }
+  render(productOneEl);
+  render(productTwoEl);
+  render(productThreeEl);
+}
+/////executable code////////
+storageFinder();
+
+productContainerEl.addEventListener('click', handleClick, true);
+
+render(productOneEl);
+render(productTwoEl);
+render(productThreeEl);
+
+
+
+
