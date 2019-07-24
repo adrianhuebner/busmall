@@ -1,0 +1,55 @@
+h1{
+  font-family: 'Ruda', sans-serif;
+  font-size: 50px;
+  text-align: center;
+}
+h2{
+  font-family: 'Ruda', sans-serif;
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+#borderImg a{
+  font-family: 'Ruda', sans-serif;
+  font-size: 15px;
+  text-align: left;
+  display: inline-block;
+  margin: 20px;
+}
+h4{
+  margin-top: 10px;
+  font-family: 'Ruda', sans-serif;
+  font-size: 20px;
+  text-align: center;
+  text-decoration: underline;
+}
+p{
+  font-family: 'Ruda', sans-serif;
+  font-size: 20px;
+  /* margin-right: 200px;
+  margin-left: 200px; */
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-indent: 50px;
+}
+#bar{
+  /* position: absolute; */
+  width: 900px;
+  margin: auto;
+}
+#myChart{
+  width: 900px;
+  height: 300px;
+  position: relative;
+}
+#pieChart{
+  width: 900px;
+  height: 300px;
+  position: relative;
+}
+#productContainer{
+  text-align: center;
+}
+img{
+  padding: 10px;
+}
