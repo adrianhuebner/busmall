@@ -71,7 +71,7 @@ function generateArrays(){
   // //console.log(sortVotes);
 
   allProducts.sort(function(a,b){
-    a.votes < b.votes ? 1 : -1;
+    return a.votes < b.votes ? 1 : -1;
   });
 
   var top3Obj = allProducts.slice(0,3);
